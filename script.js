@@ -4,7 +4,6 @@ const malla = [
   { id: "BIOCEL", nombre: "Biología Celular y Molecular", semestre: 1, prerrequisitos: [] },
   { id: "BASESBF", nombre: "Bases Matemáticas y Biofísicas", semestre: 1, prerrequisitos: [] },
   { id: "FUNDKIN", nombre: "Fundamentos de la Kinesiología", semestre: 1, prerrequisitos: [] },
-
   { id: "MF2", nombre: "Morfofunción II", semestre: 2, prerrequisitos: ["MF1"] },
   { id: "QUIBIOQ", nombre: "Química y Bioquímica", semestre: 2, prerrequisitos: [] },
   { id: "BIOETICA", nombre: "Bioética", semestre: 2, prerrequisitos: [] },
@@ -18,7 +17,6 @@ const malla = [
   { id: "ING2", nombre: "Inglés II", semestre: 3, prerrequisitos: ["ING1"] },
   { id: "CFG2", nombre: "Curso de Formación General (2)", semestre: 3, prerrequisitos: [] },
   { id: "CFG3", nombre: "Curso de Formación General (3)", semestre: 3, prerrequisitos: [] },
-
   { id: "AD", nombre: "Análisis de Datos", semestre: 4, prerrequisitos: [] },
   { id: "FISIO", nombre: "Fisiología de la Actividad Física y Ejercicio", semestre: 4, prerrequisitos: ["BIOCEL"] },
   { id: "ABIOMOV", nombre: "Análisis Bioinstrumental del Movimiento Humano", semestre: 4, prerrequisitos: ["DSM"] },
@@ -31,7 +29,6 @@ const malla = [
   { id: "EVKINMUS", nombre: "Evaluaciones en Kinesiología Musculoesquelética", semestre: 5, prerrequisitos: ["FHS"] },
   { id: "EVKINCARD", nombre: "Evaluaciones en Kinesiología Cardiorrespiratoria", semestre: 5, prerrequisitos: ["FISIO"] },
   { id: "EVKINNEURO", nombre: "Evaluaciones en Neurokinesiología", semestre: 5, prerrequisitos: ["ABIOMOV"] },
-
   { id: "INV1", nombre: "Proyecto de Investigación I", semestre: 6, prerrequisitos: ["AD"] },
   { id: "INTMUS", nombre: "Intervenciones en Kinesiología Musculoesquelética", semestre: 6, prerrequisitos: ["EVKINMUS"] },
   { id: "INTCARD", nombre: "Intervenciones en Kinesiología Cardiorrespiratoria", semestre: 6, prerrequisitos: ["EVKINCARD"] },
@@ -46,7 +43,6 @@ const malla = [
   { id: "OP1", nombre: "Optativo Profundización (1)", semestre: 7, prerrequisitos: [] },
   { id: "OP2", nombre: "Optativo Profundización (2)", semestre: 7, prerrequisitos: [] },
   { id: "CFG6", nombre: "Curso de Formación General (6)", semestre: 7, prerrequisitos: [] },
-
   { id: "INTEGRA", nombre: "Integración de Acciones en Kinesiología", semestre: 8, prerrequisitos: ["OP1"] },
   { id: "INNOVACION", nombre: "Innovación y Emprendimiento en Salud", semestre: 8, prerrequisitos: ["GESTION"] },
   { id: "APS", nombre: "APS y Salud Familiar y Comunitaria", semestre: 8, prerrequisitos: [] },
@@ -54,10 +50,20 @@ const malla = [
   { id: "OP4", nombre: "Optativo Profundización (4)", semestre: 8, prerrequisitos: [] },
 
   // QUINTO AÑO
-  { id: "INT1", nombre: "Internado Profesional I", semestre: 9, prerrequisitos: ["MF1","BIOCEL","BASESBF","FUNDKIN","MF2","QUIBIOQ","BIOETICA","BASESMOV","ING1","CFG1","FHS","DSM","ING2","CFG2","CFG3","AD","FISIO","ABIOMOV","ING3","CFG4","SALPUB","ACAFE","EVKINMUS","EVKINCARD","EVKINNEURO","INV1","INTMUS","INTCARD","INTNEURO","AGFIS","CFG5","INV2","GESTION","SALMENTAL","OP1","OP2","CFG6","INTEGRA","INNOVACION","APS","OP3","OP4"] },
-
+  {
+    id: "INT1",
+    nombre: "Internado Profesional I",
+    semestre: 9,
+    prerrequisitos: [
+      "MF1", "BIOCEL", "BASESBF", "FUNDKIN", "MF2", "QUIBIOQ", "BIOETICA",
+      "BASESMOV", "ING1", "CFG1", "FHS", "DSM", "ING2", "CFG2", "CFG3", "AD",
+      "FISIO", "ABIOMOV", "ING3", "CFG4", "SALPUB", "ACAFE", "EVKINMUS",
+      "EVKINCARD", "EVKINNEURO", "INV1", "INTMUS", "INTCARD", "INTNEURO",
+      "AGFIS", "CFG5", "INV2", "GESTION", "SALMENTAL", "OP1", "OP2", "CFG6",
+      "INTEGRA", "INNOVACION", "APS", "OP3", "OP4"
+    ]
+  },
   { id: "INT2", nombre: "Internado Profesional II", semestre: 9, prerrequisitos: ["INT1"] },
-
   { id: "INT3", nombre: "Internado Profesional III", semestre: 10, prerrequisitos: ["INT2"] },
   { id: "INT4", nombre: "Internado Profesional IV", semestre: 10, prerrequisitos: ["INT1"] }
 ];
@@ -68,13 +74,25 @@ function guardarEstado() {
   localStorage.setItem("estadoMalla", JSON.stringify(estado));
 }
 
+function actualizarEstado(div, ramo) {
+  const aprobado = estado[ramo.id] === true;
+  const requisitosCumplidos = ramo.prerrequisitos.every((id) => estado[id]);
+
+  div.className = "ramo"; // Resetear clases
+  if (aprobado) {
+    div.classList.add("aprobado");
+  } else if (!requisitosCumplidos && ramo.prerrequisitos.length > 0) {
+    div.classList.add("bloqueado");
+  }
+}
+
 function crearMalla() {
   const grid = document.getElementById("grid-container");
   grid.innerHTML = "";
 
   for (let i = 1; i <= 10; i++) {
     const columna = document.createElement("div");
-    columna.classList.add("semester");
+    columna.className = "semester";
     columna.innerHTML = `<strong>Semestre ${i}</strong>`;
 
     malla
@@ -98,19 +116,6 @@ function crearMalla() {
       });
 
     grid.appendChild(columna);
-  }
-}
-
-function actualizarEstado(div, ramo) {
-  const aprobado = estado[ramo.id] === true;
-
-  if (aprobado) {
-    div.classList.add("aprobado");
-  } else {
-    const requisitosCumplidos = ramo.prerrequisitos.every((id) => estado[id]);
-    if (!requisitosCumplidos && ramo.prerrequisitos.length > 0) {
-      div.classList.add("bloqueado");
-    }
   }
 }
 
