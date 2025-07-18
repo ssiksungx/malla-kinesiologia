@@ -1,27 +1,37 @@
+/* Estilo general */
 body {
   font-family: 'Lora', serif;
-  padding: 40px;
-  background-color: #fff4f8;
+  padding: 0;
   margin: 0;
+  background-color: #fff0f5;
 }
 
+/* Título */
 h1 {
   text-align: center;
-  margin-bottom: 50px;
+  margin: 40px 0 30px;
   color: #b30059;
   font-size: 2rem;
 }
 
+/* Contenedor principal de la malla */
 #grid-container {
   display: flex;
-  justify-content: center;
   gap: 20px;
   overflow-x: auto;
-  padding-bottom: 40px;
+  padding: 20px 30px 40px;
+  scroll-behavior: smooth;
 }
 
+/* Agrega margen inicial para que no quede pegado al borde */
+#grid-container::before {
+  content: "";
+  flex: 0 0 10px;
+}
+
+/* Columna de cada semestre */
 .semester {
-  background-color: white;
+  background-color: #ffffff;
   padding: 15px;
   border-radius: 12px;
   min-width: 180px;
@@ -32,12 +42,15 @@ h1 {
   gap: 10px;
 }
 
+/* Título del semestre */
 .semester > strong {
   color: #cc005f;
   font-size: 1.1rem;
   margin-bottom: 10px;
+  text-align: center;
 }
 
+/* Estilo de los ramos */
 .ramo {
   background-color: #fddde6;
   padding: 12px;
@@ -48,21 +61,27 @@ h1 {
   cursor: pointer;
   user-select: none;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+  border: 1px solid #f5b4c2;
 }
 
+/* Hover suave */
 .ramo:hover {
   transform: scale(1.03);
 }
 
+/* Ramos aprobados */
 .ramo.aprobado {
   background-color: #dfc7f4;
   text-decoration: line-through;
   color: #666;
+  border: 1px solid #c5b3dc;
 }
 
+/* Ramos bloqueados */
 .ramo.bloqueado {
   background-color: #e5e5e5;
   color: #999;
   cursor: not-allowed;
+  border: 1px solid #d1d1d1;
 }
